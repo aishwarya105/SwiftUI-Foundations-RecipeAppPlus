@@ -12,6 +12,8 @@ struct RecipeListApp: App {
     var body: some Scene {
         WindowGroup {
             RecipeTabView()
+                .environmentObject(RecipeModel())
+            //because featured views and list views are sub views they are still going to be accessible
         }
     }
 }
