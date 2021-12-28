@@ -12,24 +12,40 @@ struct RecipeListView: View {
     //Reference the view model
     
     @EnvironmentObject var model:RecipeModel
+    
     var body: some View {
         
         NavigationView {
-            List(model.recipes) { r in
-                
-                NavigationLink(destination: RecipeDetailView(recipe:r),
-                               label: {
-                    HStack {
-                        Image(r.image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 50, height: 50, alignment: .center)
-                            .clipped()
-                            .cornerRadius(5)
-                        Text(r.name)
+            
+            VStack(alignment: .leading) {
+                Text("All recipes")
+                    .bold()
+                    .padding(.top, 40)
+                    .font(.largeTitle)
+                ScrollView{
+                    LazyVStack(alignment:.leading){
+                        ForEach(model.recipes) { r in
+                            
+                            NavigationLink(destination: RecipeDetailView(recipe:r),
+                                           label: {
+                                HStack {
+                                    Image(r.image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 50, height: 50, alignment: .center)
+                                        .clipped()
+                                        .cornerRadius(5)
+                                    Text(r.name)
+                                        .foregroundColor(.black)
+                                }
+                            })
+                        }
                     }
-                })
-            }.navigationBarTitle("All Recipes")
+                }
+                
+            }.padding()
+            //.navigationBarTitle("All Recipes") //lets remove this to have more control on the title
+            .navigationBarHidden(true) // this will give us the space back
         }
     }
 }
