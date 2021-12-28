@@ -11,19 +11,40 @@ import SwiftUI
 struct RecipeDetailView: View {
     
     var recipe:Recipe // we wont set the property to any instance right now. We will rely on the list view to set the particular property
+    
+    @State var selectedServingSize = 2
+    
     var body: some View {
         ScrollView {
             
             VStack (alignment: .leading){
-                //MARK: Recipe Title
-//                Text(recipe.name)
-//                    .font(.title)
-                
+
                 
                 //MARK: Recipe Image
                 Image(recipe.image)
                     .resizable()
                     .scaledToFill()
+                    
+                //MARK: Recipe Title
+                Text(recipe.name)
+                    .bold()
+                    .padding(.top, 20)
+                    .padding(.leading)
+                    .font(.title)
+                
+                
+                //MARK: Serving Size Picker
+                VStack(alignment: .leading){
+                Text("Select serving size")
+                    .bold()
+                Picker("", selection : $selectedServingSize){
+                    Text("2").tag(2)
+                    Text("4").tag(4)
+                    Text("6").tag(6)
+                    Text("8").tag(8)
+                }.pickerStyle(.segmented)
+                    .frame(width: 200)
+                }.padding()
                 
                 //MARK: Ingredients
                 VStack(alignment : .leading) {
@@ -32,7 +53,8 @@ struct RecipeDetailView: View {
                         .padding([.bottom,.top], 5)
                     
                     ForEach(recipe.ingredients) { item in
-                        Text("• " + item.name)
+                        Text("• " + RecipeModel.getPortion(ingredient: item, recipeServings: recipe.servings, targetServings: selectedServingSize)
+                             + " " + item.name.lowercased())
                             .padding(.bottom,0.5)
                     }
                 }.padding(.horizontal)
@@ -54,7 +76,7 @@ struct RecipeDetailView: View {
                 .padding(.horizontal)
             }
         }
-        .navigationBarTitle(recipe.name) // this is added to the scrollview
+//        .navigationBarTitle(recipe.name) // this is added to the scrollview
     }
 }
 
@@ -65,5 +87,6 @@ struct RecipeDetailView_Previews: PreviewProvider {
         let model = RecipeModel()
         
         RecipeDetailView(recipe: model.recipes[0])
+           
     }
 }
